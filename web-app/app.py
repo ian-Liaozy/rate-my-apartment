@@ -6,6 +6,10 @@ from utils import *
 import datetime
 
 from config import Config
+import flask_login
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+
 
 # instantiate the app
 app = Flask(__name__, static_url_path='/static')
@@ -14,13 +18,10 @@ app.config.from_object(Config)
 
 
 # modules for user authentication
-import flask_login
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
+
 
 #set up flask-login for user authentication
-login_manager = flask_login.LoginManager()
-login_manager.init_app(app)
+
 
 # config = dotenv_values(".env")
 
@@ -37,6 +38,11 @@ cxn = pymongo.MongoClient(Config.MONGO_URI, serverSelectionTimeoutMS=5000)
 cxn.admin.command('ping') # The ping command is cheap and does not require auth.
 db = cxn[Config.MONGO_DBNAME] # store a reference to the database
 print(' *', 'Connected to MongoDB!') # if we get here, the connection worked!
+
+
+# app, db = create_app()
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
 
 # class to represent user
